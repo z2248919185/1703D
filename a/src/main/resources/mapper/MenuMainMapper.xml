@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bawei.dao.MenuMainDao">
+<!-- 删除 -->
+	<delete id="dele">
+		delete from menu_main where menu_main.menuId=#{menuId}
+	</delete>
+<!-- 批量删除 -->
+	<delete id="delete">
+		delete from menu_main where menu_main.menuId in
+		<foreach collection="array" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+<!-- 添加 -->
+	<insert id="inset" parameterType="MenuMain">
+		insert into menu_main(menuId,mainId) values(#{menuId},#{mainId})
+	</insert>
+</mapper>      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

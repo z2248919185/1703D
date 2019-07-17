@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bawei.dao.MenuDao">
+	<select id="queryAll" resultMap="menuMap">
+		select * from menu 
+		<where>
+			<if test="mname!=null and mname!=''">
+				and mname like concat('%',#{mname},'%')
+			</if>
+		</where>
+	</select>
+	<resultMap type="Menu" id="menuMap">
+		<id property="menuId" column="menuId"/>
+		<result property="mname" column="mname"/>
+		<result property="price" column="price"/>
+		<collection property="mains" ofType="Main" javaType="java.util.List" select="findMain" column="menuId"></collection>
+	</resultMap>
+	<select id="findMain" parameterType="int" resultType="Main">
+		select main.*,menu_main.* from main join menu_main on main.mainId = menu_main.mainId where menu_main.menuId=#{menuId}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="dele" parameterType="Menu">
+		delete from menu where menu.menuId=#{menuId}
+	</delete>
+	<!-- 查看 -->
+	<select id="byId" resultMap="menuMap">
+		select * from menu where menu.menuId=#{menuId}
+	</select>
+	<!-- 批量删除 -->
+	<delete id="delete" parameterType="Menu">
+		delete from menu where menu.menuId in
+		<foreach collection="array" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 添加 -->
+	<insert id="add" parameterType="Menu">
+		insert into menu(mname,price) values(#{mname},#{price})
+		<!-- 新增menu后获取id -->
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="menuId">
+			select last_insert_id() as menuId
+		</selectKey>
+	</insert>
+	<!-- 回显 -->
+	<select id="update" resultMap="menuMap">
+		select * from menu where menu.menuId=#{menuId}
+	</select>
+	<!-- 修改 -->
+	<update id="toupdate">
+		update menu set mname=#{mname},price=#{price} where menuId=#{menuId}
+	</update>
+</mapper>      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
